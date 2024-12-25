@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js" defer></script>
+    <script>
+    function submitForm(event) {
+        event.preventDefault(); 
+        
+        
+        var xhttp = new XMLHttpRequest();
+        
+        // Get form data
+        var form = document.getElementById('orderForm');
+        var formData = new FormData(form);
+        var queryString = new URLSearchParams(formData).toString();
+        console.log(queryString);
+
+        var method = "GET";
+        xhttp.open(method, "searchservlet?" + queryString, true);  
+        
+        xhttp.setRequestHeader("Content-Type" , "application/x-www-form-urlencoded");
+
+        
+        function kelvinToFahrenheit(kelvin) {
+            return ((kelvin - 273.15) * 9/5 + 32).toFixed(0);
+        }
+
+        
+        function formatTime(timestamp) {
+            return new Date(timestamp * 1000).toLocaleTimeString();
+        }
+        
+        function miles(input) {
+            return (input * 2.237).toFixed(0);
+        }
+        
+        function renderWeatherTable(response) {
+            const tableBody = document.querySelector("#weatherTable tbody");
+
+           
+            tableBody.innerHTML = "";
+
+            if (response.list && response.list.length > 0) {
+                response.list.forEach(item => {
+                    const row = document.createElement("tr");
+
+                    const cityName = document.createElement("td");
+                    cityName.textContent = item.name;
+                    row.appendChild(cityName);
+
+                    const tempLow = document.createElement("td");
+                    tempLow.textContent = kelvinToFahrenheit(item.main.temp_min) + "°F";
+                    row.appendChild(tempLow);
+
+                    const tempHigh = document.createElement("td");
+                    tempHigh.textContent = kelvinToFahrenheit(item.main.temp_max) + "°F";
+                    row.appendChild(tempHigh);
+
+                    tableBody.appendChild(row);
+                });
+            } else {
+                const row = document.createElement("tr");
+                const message = document.createElement("td");
+                message.colSpan = 3;
+                message.textContent = "No data available";
+                row.appendChild(message);
+                tableBody.appendChild(row);
+            }
+        }
+
+   
+        xhttp.onload = function() {
+            if (xhttp.status === 200) {
+                try {
+                    console.log(xhttp.responseText);
+                    var response = JSON.parse(xhttp.responseText);
+                    
+                    const cityRadio = document.getElementById('city');
+                    const latitudeRadio = document.getElementById('latitude');
+                    
+                    if (cityRadio.checked){
+                        renderWeatherTable(response);
+                    }
+                    
+                    else{
+	                    const earthParagraph = document.getElementById('earth');
+	                    earthParagraph.textContent = response.name;
+	                    console.log("got here");
+	                    
+	                   
+	                    const snowParagraph = document.getElementById('snow');
+	                    snowParagraph.textContent = `${kelvinToFahrenheit(response.main.temp_min)}°F`;
+	                    console.log("got here 1");
+	
+	                    const sunParagraph = document.getElementById('sun');
+	                    sunParagraph.textContent = `${kelvinToFahrenheit(response.main.temp_max)}°F`;
+	                    console.log("got here 2");
+	
+	                    
+	                    const windParagraph = document.getElementById('wind');
+	                    windParagraph.textContent = `${miles(response.wind.speed)} mi/h`;
+	                    console.log("got here");
+	
+	                    const waterParagraph = document.getElementById('water');
+	                    waterParagraph.textContent = `${response.main.humidity}%`;
+	                    console.log("got here");
+	
+	                  
+	                    const locParagraph = document.getElementById('loc');
+	                    locParagraph.textContent = `${response.coord.lon.toFixed(0)}/${response.coord.lat.toFixed(0)}`;
+	                    console.log("got here");
+	
+	                    
+	                    const sunriseParagraph = document.getElementById('sunrise');
+	                    sunriseParagraph.textContent = `${formatTime(response.sys.sunrise)} / ${formatTime(response.sys.sunset)}`;
+                    } 
+
+                } catch (e) {
+                    console.error('Error parsing response:', e);
+                    alert('Error processing server response');
+                }
+            } else {
+                console.error('Server error:', xhttp.status);
+                alert('Error: ' + xhttp.status);
+            }
+        };
+
+        
+        xhttp.onerror = function() {
+            console.error('Network Error');
+            alert('Network Error. Please check your connection.');
+        };
+
+   
+        xhttp.send();
+    }
+    </script>
+    <title>Home Page Assignment 3</title>
+    <style>
+        table {
+            width: 40%;
+            border-collapse: collapse;
+            color: white; 
+            margin-left: 27rem; 
+            
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <img src="./Assignment 3 Images/background.jpg" alt="">
+        
+        <div class="topnav">
+            <a href="register.html">Register</a>
+            <a href="login.html">Login</a>
+        </div>
+
+        <form id="orderForm" name="form" onsubmit="submitForm(event)">
+            <div class="mainbody">
+                <img src="./Assignment 3 Images/logo.png" alt="logo">
+                <input type="text" id="name" name="name" placeholder="Los Angeles, California" required>
+
+                <div class="magnifying" onclick="map()">
+                    <a id="magnifying-link" href="#">
+                        <img src="Assignment 3 Images/magnifying_glass.jpeg" alt="magnifying glass">
+                    </a>
+                </div>
+
+                <div class="radio-buttons">
+                    <div class="city">
+                        <input type="radio" id="city" name="location" value="city" checked>
+                        <label for="city">City</label>
+                    </div>
+                    <div class="latitude">
+                        <input type="radio" id="latitude" name="location" value="latitude">
+                        <label for="latitude">Lat/Long</label>
+                    </div>
+                </div>
+                
+                <br>
+                <button type="submit" onclick="display();" id="hi">hi</button>
+                <button type="submit" id="button">Display All</button>  
+            </div>
+        </form>
+        
+        <div id="map"></div>
+        <div id="response">
+            <p id="earth"></p>
+            <p id="snow"></p>
+            <p id="sun"></p>
+            <p id="wind"></p>
+            <p id="water"></p>
+            <p id="loc"></p>
+            <p id="sunrise"></p>
+        </div>
+
+        <!-- Weather Table -->
+        <table id="weatherTable">
+            <thead>
+                <tr>
+                    <th>City</th>
+                    <th>Temp. Low</th>
+                    <th>Temp. High</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDznlHMj_HP4_mkLGpfyg5RpQnsTiKcvQY" defer></script>
+    </div>
+</body>
+</html>

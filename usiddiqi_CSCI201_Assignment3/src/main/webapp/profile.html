@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="profile.css">
+        <script>
+            function loadSearchHistory() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            
+                            var searchHistory = JSON.parse(this.responseText);
+
+                           
+                            var tableHTML = "<table border='1'><tr><th>Search Query</th></tr>";
+                            searchHistory.forEach(function(item) {
+                                tableHTML += "<tr><td>" + item.search + "</td></tr>";
+                            });
+                            tableHTML += "</table>";
+
+                            document.getElementById('searchHistoryContainer').innerHTML = tableHTML;
+                        } else {
+                            // Handle error scenarios
+                            document.getElementById('searchHistoryContainer').innerHTML =
+                                "Error loading search history. Status: " + this.status;
+                            console.error("Failed to load search history", this.responseText);
+                        }
+                    }
+                };
+                
+                xhttp.open("GET", "/usiddiqi_CSCI201_Assignment3/profileservlet", true);
+                xhttp.send();
+            }
+            window.onload = loadSearchHistory;
+        </script>
+        <title>Home Page Assignment 3</title>
+    </head>
+    <body>
+        <div class="background">
+            <img src="./Assignment 3 Images/background.jpg" alt="">
+
+            <div class="topnav">
+                <a href="index.html">Sign Out</a>
+                <a href="profile.html">Profile</a>
+            </div>
+
+            <div class="mainbody">
+                <h1>SEARCH HISTORY</h1>
+                <div id='searchHistoryContainer'></div>
+            </div>
+        </div>
+    </body>
+</html>

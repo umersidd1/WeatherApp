@@ -1,0 +1,99 @@
+body {
+    background-color: black;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.background {
+    position: relative; /* Ensure proper positioning */
+}
+
+.background img {
+    margin-top: 70px;
+    height: 90vh;
+    width: 100vw;
+    filter: blur(5px);
+}
+
+.topnav {
+    position: absolute; /* or relative */
+    top: 10px; /* Adjust as needed */
+    left: 10px; /* Adjust as needed */
+    width: 100%;
+    padding: 10px; /* Add some padding */
+    color: black;
+}
+
+.topnav a {
+    margin-left: 5px; /* Space between links */
+    text-decoration: none; /* Remove underline */
+    color: white;
+    float: right;
+    margin-right: 40px;
+}
+
+
+.mainbody {
+    margin-top: 10px; 
+    position: absolute; /* or relative */
+    top: 10px; /* Adjust as needed */
+    left: 10x; /* Adjust as needed */
+    width: 100%;
+    padding: 10px; /* Add some padding */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mainbody img {
+    margin-top: 80px;
+    height: 120px; 
+    width: 120px; 
+    filter: blur(0px);
+    z-index: 1; 
+}
+
+.info {
+    position: absolute; 
+    margin-top: 130px; 
+    width: 20%; 
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    border-radius: 10px; 
+}
+
+.info .username{
+    margin-top: 100px; 
+}
+
+.info p{
+    color: white;
+    text-align: center;
+}
+
+.info button[type="submit"]{
+    background-color: #ffa31a;
+    margin-top: 15px; 
+    margin-bottom: 15px;
+    height: 40px; 
+    padding: 5px;
+    width: 100%;
+    border-radius: 7px;
+    border-color: orange
+}
+
+.info input[type="text"]{
+    padding: 8px;
+    width: 90%;
+    border-radius: 7px;
+    background-color: #686A6A;
+    color: #C0C1C0;
+    border-color: white;
+}
+
+.info input[type="text"]::placeholder {
+    color: #C0C1C0;
+}

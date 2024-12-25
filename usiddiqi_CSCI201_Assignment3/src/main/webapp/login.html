@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="login.css">
+        <script>
+        function validateForm(event) {
+        	event.preventDefault(); 
+
+            // Create XMLHttpRequest object
+            var xhr = new XMLHttpRequest();
+
+            // Send data to servlet
+        	var formData = new FormData(document.form);
+        	var queryString = new URLSearchParams(formData).toString();
+        	
+        	xhr.open('POST', "loginservlet?" + queryString, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+        			console.log("RESPONSE: " + xhr.responseText); 
+                    if (xhr.responseText.startsWith("Th") || xhr.responseText.startsWith("In")) { // Error message was sent back
+                        alert("Login failed " + xhr.responseText);
+                    } else { // Response was successful
+                        /* alert("Works " + xhr.responseText); */
+                        localStorage.clear();
+                        localStorage.setItem("username", xhr.responseText); 
+                        window.location.href = 'index.html'; 
+                    }
+                } else {
+                    console.error('Request failed. Status:', xhr.status);
+                }
+            };
+        	
+          
+            xhr.send(formData);
+        }</script>
+        <title>Home Page Assignment 3</title>
+    </head>
+    <body>
+        <div class="background">
+            <img src="./Assignment 3 Images/background.jpg" alt="">
+
+            <div class="topnav">
+                <a href="register.html">Register</a>
+                <a href="login.html">Login</a>
+            </div>
+
+            <div class="mainbody">
+                <img src="./Assignment 3 Images/Keychain_Locked@2x.png" alt="locked key">
+                <div class="info">
+                <form id="orderForm" name="form" onsubmit="validateForm(event)">
+                    <p class="username">Username</p>
+                    <input type="text" id="username" name="username" placeholder="Enter username" required>
+                    <p>Password</p>
+                    <input type="text" id="password" name="password" placeholder="Enter password" required>
+                 
+                    <!-- eventually change to index html if login is successful, else, output the error messages -->
+                    <a id="login" href="">
+                        <button type="submit" id="button">Login</button>
+                    </a>
+                 </form>
+                 
+                 <div id="error-field"></div>
+                 
+                 
+                 
+                   
+                    
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
